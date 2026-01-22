@@ -35,7 +35,7 @@ export const generatePDF = async (invoiceData: InvoiceData, template: TemplateTy
 
 // Helper function to add multi-line text
 const addMultiLineText = (pdf: jsPDF, text: string, x: number, y: number, maxWidth: number): number => {
-  if (!text) return y;
+  if (!text || text === null || text === undefined) return y;
   const lines = pdf.splitTextToSize(text, maxWidth);
   pdf.text(lines, x, y);
   return y + (lines.length * 5);
@@ -74,7 +74,9 @@ const renderModernTemplate = (pdf: jsPDF, data: InvoiceData, currencySymbol: str
   // Website
   pdf.setFontSize(10);
   pdf.setFont('helvetica', 'normal');
-  pdf.text(data.companyWebsite, MARGIN, 32);
+  if (data.companyWebsite) {
+    pdf.text(data.companyWebsite, MARGIN, 32);
+  }
 
   // INVOICE title
   pdf.setFontSize(28);
@@ -243,7 +245,7 @@ const renderModernTemplate = (pdf: jsPDF, data: InvoiceData, currencySymbol: str
     }
     pdf.setFontSize(8);
     pdf.setTextColor(100, 100, 100);
-    y = addMultiLineText(pdf, data.footerMessage, A4_WIDTH_MM / 2, y, CONTENT_WIDTH);
+    pdf.text(data.footerMessage, A4_WIDTH_MM / 2, y, { align: 'center' });
   }
 };
 
@@ -274,7 +276,9 @@ const renderClassicTemplate = (pdf: jsPDF, data: InvoiceData, currencySymbol: st
   y += 5;
   pdf.text(data.companyEmail, MARGIN, y);
   y += 5;
-  pdf.text(data.companyWebsite, MARGIN, y);
+  if (data.companyWebsite) {
+    pdf.text(data.companyWebsite, MARGIN, y);
+  }
 
   // Invoice details on right
   pdf.setFontSize(9);
