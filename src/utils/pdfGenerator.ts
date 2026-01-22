@@ -2,6 +2,10 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { InvoiceData, TemplateType } from '../types/invoice';
 
+// A4 dimensions in mm
+const A4_WIDTH_MM = 210;
+const A4_HEIGHT_MM = 297;
+
 export const generatePDF = async (invoiceData: InvoiceData, _template: TemplateType) => {
   try {
     const invoiceElement = document.getElementById('invoice-content');
@@ -16,7 +20,7 @@ export const generatePDF = async (invoiceData: InvoiceData, _template: TemplateT
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
-    tempContainer.style.width = '210mm'; // A4 width
+    tempContainer.style.width = `${A4_WIDTH_MM}mm`;
     tempContainer.style.background = 'white';
     document.body.appendChild(tempContainer);
 
@@ -36,8 +40,8 @@ export const generatePDF = async (invoiceData: InvoiceData, _template: TemplateT
     document.body.removeChild(tempContainer);
 
     // Calculate dimensions
-    const imgWidth = 210; // A4 width in mm
-    const pageHeight = 297; // A4 height in mm
+    const imgWidth = A4_WIDTH_MM;
+    const pageHeight = A4_HEIGHT_MM;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     let heightLeft = imgHeight;
 
